@@ -4,35 +4,35 @@ using System.Collections.Generic;
 namespace AspNet.Identity.EntityFramework6
 {
     /// <summary>
-    ///     EntityType that represents one specific user claim
+    /// Represents a claim that a user possesses. 
     /// </summary>
     public class IdentityUserClaim : IdentityUserClaim<string>
     {
     }
 
     /// <summary>
-    ///     EntityType that represents one specific user claim
+    /// Represents a claim that a user possesses. 
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TKey">The type used for the primary key for this user that possesses this claim.</typeparam>
     public class IdentityUserClaim<TKey>
     {
         /// <summary>
-        ///     Primary key
+        /// Gets or sets the identifier for this user claim.
         /// </summary>
         public virtual int Id { get; set; }
 
         /// <summary>
-        ///     User Id for the user who owns this login
+        /// Gets or sets the of the primary key of the user associated with this claim.
         /// </summary>
         public virtual TKey UserId { get; set; }
 
         /// <summary>
-        ///     Claim type
+        /// Gets or sets the claim type for this claim.
         /// </summary>
         public virtual string ClaimType { get; set; }
 
         /// <summary>
-        ///     Claim value
+        /// Gets or sets the claim value for this claim.
         /// </summary>
         public virtual string ClaimValue { get; set; }
     }

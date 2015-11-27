@@ -1,6 +1,6 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "EntityFramework6 support implementation for Asp.Net Identity 3.0 RC1",
+  "description": "Implementation if EntityFramework6 support for Asp.Net Identity 3.0 RC1",
   "authors": [ "Gena Hrapan" ],
   "tags": [ "" ],
   "projectUrl": "",

@@ -28,15 +28,15 @@ namespace AspNet.Identity.EntityFramework6
     }
 
     /// <summary>
-    /// Generic IdentityDbContext base that can be customized with entity types that extend from the base IdentityUserXXX types.
+    /// Base class for the Entity Framework database context used for identity.
     /// </summary>
-    /// <typeparam name="TUser"></typeparam>
-    /// <typeparam name="TRole"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TUserLogin"></typeparam>
-    /// <typeparam name="TUserRole"></typeparam>
-    /// <typeparam name="TUserClaim"></typeparam>
-    /// <typeparam name="TRoleClaim"></typeparam>
+    /// <typeparam name="TUser">The type of user objects.</typeparam>
+    /// <typeparam name="TRole">The type of role objects.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for users and roles.</typeparam>
+    /// <typeparam name="TUserLogin">The type that represents a login.</typeparam>
+    /// <typeparam name="TUserRole">The type that represents the link between a user and a role.</typeparam>
+    /// <typeparam name="TUserClaim">The type that represents a claim that a user possesses.</typeparam>
+    /// <typeparam name="TRoleClaim">The type that represents a claim that is granted to all users within a role.</typeparam>
     public class IdentityDbContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleClaim> : DbContext
         where TUser : IdentityUser<TKey, TUserLogin, TUserRole, TUserClaim>
         where TRole : IdentityRole<TKey, TUserRole, TRoleClaim>

@@ -33,7 +33,7 @@ namespace AspNet.Identity.EntityFramework6
     }
 
     /// <summary>
-    /// Creates a new instance of a persistence store for the specified user and role types.
+    /// Creates a new instance of a persistence store for the specified types.
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
@@ -167,7 +167,6 @@ namespace AspNet.Identity.EntityFramework6
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            //Context.Add(user);
             Context.Entry(user).State = EntityState.Added;
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
@@ -182,10 +181,8 @@ namespace AspNet.Identity.EntityFramework6
                 throw new ArgumentNullException(nameof(user));
             }
 
-            //Context.Attach(user);
             Context.Entry(user).State = EntityState.Unchanged;
             user.ConcurrencyStamp = Guid.NewGuid().ToString();
-            //Context.Update(user);
             Context.Entry(user).State = EntityState.Modified;
             try
             {
@@ -207,7 +204,6 @@ namespace AspNet.Identity.EntityFramework6
                 throw new ArgumentNullException(nameof(user));
             }
 
-            //Context.Remove(user);
             Context.Entry(user).State = EntityState.Deleted;
             try
             {
@@ -233,9 +229,6 @@ namespace AspNet.Identity.EntityFramework6
             var id = ConvertIdFromString(userId);
 
             return Users.FirstOrDefaultAsync(u => u.Id.Equals(id), cancellationToken);
-
-            //var userIdAsInt = int.Parse(userId);
-            //return Users.FirstOrDefaultAsync(u => u.Id == userIdAsInt, cancellationToken);
         }
 
         public virtual TKey ConvertIdFromString(string id)
