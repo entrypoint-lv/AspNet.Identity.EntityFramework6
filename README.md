@@ -54,21 +54,30 @@ Here is how you can use Int32 instead of default String for primary keys:
     
         public class AppRole : IdentityRole<int, AppUserRole, AppRoleClaim> { }
     
-2. Create your own UserStore and RoleStore by inheriting from provided ones:
+2. Create your own data context by inheriting from the provided one:
+
+        using AspNet.Identity.EntityFramework6;
+        
+        public class AppDbContext : IdentityDbContext<AppUser, AppRole, int, AppUserLogin, AppUserRole, AppUserClaim, AppRoleClaim>, IDisposable
+        {
+            public AppDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+        }
+
+3. Create your own UserStore and RoleStore by inheriting from provided ones:
 
         using AspNet.Identity.EntityFramework6;
         
         public class AppRoleStore : RoleStore<AppRole, AppUserRole, AppRoleClaim, DbContext, int>
         {
-            public AppRoleStore(DbContext context) : base(context) { }
+            public AppRoleStore(AppDbContext context) : base(context) { }
         }
     
         public class AppUserStore : UserStore<AppUser, AppRole, AppUserRole, AppUserClaim, AppUserLogin, AppRoleClaim, DbContext, int>
         {
-            public AppUserStore(DbContext context) : base(context) { }
+            public AppUserStore(AppDbContext context) : base(context) { }
         }
     
-3. Alter Startup.cs accordingly:
+4. Alter Startup.cs accordingly:
 
         using AspNet.Identity.EntityFramework6;
         
@@ -76,10 +85,14 @@ Here is how you can use Int32 instead of default String for primary keys:
         {
           public void ConfigureServices(IServiceCollection services)
           {
-              services.AddIdentity<AppUser, AppRole>()
-              .AddRoleStore<AppRoleStore>()
-              .AddUserStore<AppUserStore>()
-              .AddDefaultTokenProviders();
+            services.AddScoped<AppDbContext, AppDbContext>(f => {
+              return new AppDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
+            });
+            
+            services.AddIdentity<AppUser, AppRole>()
+            .AddRoleStore<AppRoleStore>()
+            .AddUserStore<AppUserStore>()
+            .AddDefaultTokenProviders();
           }
         }
     
