@@ -1,0 +1,20 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "EntityFramework6 support implementation for Asp.Net Identity 3.0 RC1",
+  "authors": [ "Gena Hrapan" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "frameworks": {
+    "dnx451": {
+      "dependencies": {
+        "EntityFramework": "6.1.3",
+        "Microsoft.AspNet.Identity": "3.0.0-rc1-final"
+      },
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      }
+    }
+  }
+}
