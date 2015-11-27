@@ -4,7 +4,21 @@ As Identity 3.0 RC1 does not provide any support for EF6, here it the custom imp
 
 ## Basic Usage
 
-Init Identity 3.0 with provided IdentityUser, IdentityRole, UserStore and RoleStore:
+1. Ensure that you have references to both EntityFramework 6 and Microsoft.AspNet.Identity in your project.json:
+
+          "frameworks": {
+            "dnx451": {
+              "dependencies": {
+                "EntityFramework": "6.1.3",
+                "Microsoft.AspNet.Identity": "3.0.0-rc1-final"
+              },
+              "frameworkAssemblies": {
+                "System.Data": "4.0.0.0"
+              }
+            }
+          } 
+
+2. Init Identity with provided IdentityUser, IdentityRole, UserStore and RoleStore in Startup.cs:
 
         using AspNet.Identity.EntityFramework6;
         
