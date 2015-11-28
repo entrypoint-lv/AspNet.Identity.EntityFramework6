@@ -49,7 +49,8 @@ As Identity 3.0 RC1 does not provide any support for EF6, here it the custom imp
 
 ## Your own POCOs
 
-Of course, you can inherit from provided POCOs in order to add new properties or change the type of the primary key for user and role. In the following example we add some properties and use Int32 instead of default String as the primary key type:
+Of course, you can inherit from provided POCOs in order to add new properties or change the type of the primary key for user and role. 
+In the following example we add some properties and use Int32 instead of default String as the primary key type:
 
 1. Create your own derived POCOs:
 
