@@ -82,11 +82,6 @@ namespace AspNet.Identity.EntityFramework6
         /// </summary>
         public bool RequireUniqueEmail { get; set; }
 
-        public IDbSet<TEntity> SetEntity<TEntity>() where TEntity : class
-        {
-            return base.Set<TEntity>();
-        }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
