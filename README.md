@@ -1,10 +1,10 @@
 # AspNet.Identity.EntityFramework6
 
-As Identity 3.0 RC1 does not provide any support for EF6, here it the custom implementation.
+As Identity 3.0 RC1 does not provide the support for EF6, here is the custom implementation.
 
 ## Basic Usage
 
-1. Ensure that you have references to both EntityFramework 6 and Microsoft.AspNet.Identity in your project.json:
+1. Reference both EntityFramework 6 and Microsoft.AspNet.Identity packages in your project.json, but DO NOT reference the Microsoft.AspNet.Identity.EntityFramework package:
 
           "frameworks": {
             "dnx451": {
