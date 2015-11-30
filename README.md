@@ -1,10 +1,10 @@
 # AspNet.Identity.EntityFramework6
 
-As Identity 3.0 RC1 does not provide any support for EF6, here it the custom implementation.
+As Identity 3.0 RC1 does not provide the support for EF6, here is the custom implementation.
 
 ## Basic Usage
 
-1. Ensure that you have references to both EntityFramework 6 and Microsoft.AspNet.Identity in your project.json:
+1. Reference both EntityFramework 6 and Microsoft.AspNet.Identity packages in your project.json, but DO NOT reference the Microsoft.AspNet.Identity.EntityFramework package:
 
           "frameworks": {
             "dnx451": {
@@ -18,31 +18,49 @@ As Identity 3.0 RC1 does not provide any support for EF6, here it the custom imp
             }
           } 
 
-2. Init Identity with provided IdentityUser, IdentityRole, UserStore and RoleStore in Startup.cs:
+2. Make sure that you inherit your data context from the provided IdentityDbContext:
+
+        using AspNet.Identity.EntityFramework6;
+        
+        public class AppDbContext : IdentityDbContext
+        {
+            public AppDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+        }
+
+2. Init Asp.Net Identity with provided IdentityUser, IdentityRole, UserStore and RoleStore in Startup.cs. Also, don't forget to configure the dependency injection for your data context as well:
 
         using AspNet.Identity.EntityFramework6;
         
         public class Startup
         {
-          public void ConfigureServices(IServiceCollection services)
-          {
-              services.AddIdentity<IdentityUser, IdentityRole>()
-              .AddRoleStore<RoleStore>()
-              .AddUserStore<UserStore>()
-              .AddDefaultTokenProviders();
-          }
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddScoped<DbContext, AppDbContext>(f => {
+                    return new AppDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
+                });
+    
+                services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddRoleStore<RoleStore>()
+                    .AddUserStore<UserStore>()
+                    .AddDefaultTokenProviders();
+            }
         }
 
 
-## Different type for primary keys
+## Your own POCOs
 
-Here is how you can use Int32 instead of default String for primary keys:
+Of course, you can inherit from provided POCOs in order to add new properties or change the type of the primary key for user and role. 
+In the following example we add some properties and use Int32 instead of default String as the primary key type:
 
-1. Create your own POCOs by inheriting from provided ones:
+1. Create your own derived POCOs:
 
         using AspNet.Identity.EntityFramework6;
         
-        public class AppUser: IdentityUser<int, AppUserLogin, AppUserRole, AppUserClaim> { }
+        public class AppUser: IdentityUser<int, AppUserLogin, AppUserRole, AppUserClaim> {
+        
+            public virtual string MyNewProperty { get; set; }
+
+        }
     
         public class AppUserRole : IdentityUserRole<int> { }
     
@@ -54,32 +72,45 @@ Here is how you can use Int32 instead of default String for primary keys:
     
         public class AppRole : IdentityRole<int, AppUserRole, AppRoleClaim> { }
     
-2. Create your own UserStore and RoleStore by inheriting from provided ones:
+2. Create your own derived data context:
+
+        using AspNet.Identity.EntityFramework6;
+        
+        public class AppDbContext : IdentityDbContext<AppUser, AppRole, int, AppUserLogin, AppUserRole, AppUserClaim, AppRoleClaim>, IDisposable
+        {
+            public AppDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+        }
+
+3. Create your own derived UserStore and RoleStore:
 
         using AspNet.Identity.EntityFramework6;
         
         public class AppRoleStore : RoleStore<AppRole, AppUserRole, AppRoleClaim, DbContext, int>
         {
-            public AppRoleStore(DbContext context) : base(context) { }
+            public AppRoleStore(AppDbContext context) : base(context) { }
         }
     
         public class AppUserStore : UserStore<AppUser, AppRole, AppUserRole, AppUserClaim, AppUserLogin, AppRoleClaim, DbContext, int>
         {
-            public AppUserStore(DbContext context) : base(context) { }
+            public AppUserStore(AppDbContext context) : base(context) { }
         }
     
-3. Alter Startup.cs accordingly:
+4. Alter Startup.cs accordingly:
 
         using AspNet.Identity.EntityFramework6;
         
         public class Startup
         {
-          public void ConfigureServices(IServiceCollection services)
-          {
-              services.AddIdentity<AppUser, AppRole>()
-              .AddRoleStore<AppRoleStore>()
-              .AddUserStore<AppUserStore>()
-              .AddDefaultTokenProviders();
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddScoped<AppDbContext, AppDbContext>(f => {
+                    return new AppDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
+                });
+            
+                services.AddIdentity<AppUser, AppRole>()
+                    .AddRoleStore<AppRoleStore>()
+                    .AddUserStore<AppUserStore>()
+                    .AddDefaultTokenProviders();
           }
         }
     
