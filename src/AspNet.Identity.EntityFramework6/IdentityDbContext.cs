@@ -163,6 +163,7 @@ namespace AspNet.Identity.EntityFramework6
         where TUserRole : IdentityUserRole<TKey>
         where TUserClaim : IdentityUserClaim<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityDbContext" /> class using the connection string for the database to which a connection will be made.

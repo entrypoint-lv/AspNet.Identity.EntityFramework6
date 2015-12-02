@@ -14,7 +14,7 @@ namespace AspNet.Identity.EntityFramework6
     /// Represents a claim that a user possesses. 
     /// </summary>
     /// <typeparam name="TKey">The type used for the primary key for this user that possesses this claim.</typeparam>
-    public class IdentityUserClaim<TKey>
+    public class IdentityUserClaim<TKey> where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Gets or sets the identifier for this user claim.

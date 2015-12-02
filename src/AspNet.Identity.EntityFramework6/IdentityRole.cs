@@ -41,6 +41,7 @@ namespace AspNet.Identity.EntityFramework6
     public class IdentityRole<TKey, TUserRole, TRoleClaim>
         where TUserRole : IdentityUserRole<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Initializes a new instance of <see cref="IdentityRole{TKey}"/>.
