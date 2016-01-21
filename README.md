@@ -18,21 +18,21 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
             }
           } 
 
-2. Make sure that you inherit your data context from the provided IdentityDbContext:
-
-        using AspNet.Identity.EntityFramework6;
-        
-        public class ApplicationDbContext : IdentityDbContext
-        {
-            public ApplicationDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
-        }
-
-3. (optional) Inherit you applicaiton user class from the provided IdentityUser:
+2. Create you applicaiton user class by inheriting from the provided IdentityUser:
 
         using AspNet.Identity.EntityFramework6;
 
         public class ApplicationUser : IdentityUser
         {
+        }
+
+3. Make sure that you inherit your data context from the provided IdentityDbContext:
+
+        using AspNet.Identity.EntityFramework6;
+        
+        public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+        {
+            public ApplicationDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
         }
 
 4. Init Asp.Net Identity with your ApplicationUser class and provided IdentityUser, IdentityRole, UserStore and RoleStore classes in Startup.cs. Also, don't forget to configure the dependency injection for your data context as well:
