@@ -37,6 +37,7 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
 
 4. Init Asp.Net Identity with your ApplicationUser class and provided IdentityUser, IdentityRole, UserStore and RoleStore classes in Startup.cs. Also, don't forget to configure the dependency injection for your data context as well:
 
+        using System.Data.Entity;
         using AspNet.Identity.EntityFramework6;
         
         public class Startup
@@ -105,6 +106,7 @@ In the following example we add some properties and use Int32 instead of default
     
 4. Alter Startup.cs accordingly:
 
+        using System.Data.Entity;
         using AspNet.Identity.EntityFramework6;
         
         public class Startup
