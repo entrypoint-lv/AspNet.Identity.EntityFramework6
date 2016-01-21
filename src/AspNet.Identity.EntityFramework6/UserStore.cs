@@ -167,7 +167,7 @@ namespace AspNet.Identity.EntityFramework6
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            Context.Entry(user).State = EntityState.Added;
+            Context.Set<TUser>().Add(user);
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
         }
@@ -181,7 +181,7 @@ namespace AspNet.Identity.EntityFramework6
                 throw new ArgumentNullException(nameof(user));
             }
 
-            Context.Entry(user).State = EntityState.Unchanged;
+            Context.Set<TUser>().Attach(user);
             user.ConcurrencyStamp = Guid.NewGuid().ToString();
             Context.Entry(user).State = EntityState.Modified;
             try
@@ -204,7 +204,7 @@ namespace AspNet.Identity.EntityFramework6
                 throw new ArgumentNullException(nameof(user));
             }
 
-            Context.Entry(user).State = EntityState.Deleted;
+            Context.Set<TUser>().Remove(user);
             try
             {
                 await SaveChanges(cancellationToken);
