@@ -2,6 +2,10 @@
 
 As Identity 3.0 RC1 does not provide the support for EF6, here is the custom provider.
 
+## Samples
+
+Refer to the [samples](samples) folder.
+
 ## Basic Usage
 
 1. Reference both EntityFramework 6 and Microsoft.AspNet.Identity packages in your project.json, but DO NOT reference the Microsoft.AspNet.Identity.EntityFramework package:
