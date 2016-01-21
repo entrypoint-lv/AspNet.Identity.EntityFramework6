@@ -18,16 +18,24 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
             }
           } 
 
-2. Make sure that you inherit your data context from the provided IdentityDbContext:
+2. Create you applicaiton user class by inheriting from the provided IdentityUser:
+
+        using AspNet.Identity.EntityFramework6;
+
+        public class ApplicationUser : IdentityUser
+        {
+        }
+
+3. Make sure that you inherit your data context from the provided IdentityDbContext:
 
         using AspNet.Identity.EntityFramework6;
         
-        public class AppDbContext : IdentityDbContext
+        public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
-            public AppDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+            public ApplicationDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
         }
 
-2. Init Asp.Net Identity with provided IdentityUser, IdentityRole, UserStore and RoleStore in Startup.cs. Also, don't forget to configure the dependency injection for your data context as well:
+4. Init Asp.Net Identity with your ApplicationUser class and provided IdentityUser, IdentityRole, UserStore and RoleStore classes in Startup.cs. Also, don't forget to configure the dependency injection for your data context as well:
 
         using AspNet.Identity.EntityFramework6;
         
@@ -35,13 +43,13 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
         {
             public void ConfigureServices(IServiceCollection services)
             {
-                services.AddScoped<DbContext, AppDbContext>(f => {
-                    return new AppDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
+                services.AddScoped<DbContext, ApplicationDbContext>(f => {
+                    return new ApplicationDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
                 });
     
-                services.AddIdentity<IdentityUser, IdentityRole>()
+                services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddRoleStore<RoleStore>()
-                    .AddUserStore<UserStore>()
+                    .AddUserStore<UserStore<ApplicationUser>>()
                     .AddDefaultTokenProviders();
             }
         }
@@ -56,43 +64,43 @@ In the following example we add some properties and use Int32 instead of default
 
         using AspNet.Identity.EntityFramework6;
         
-        public class AppUser: IdentityUser<int, AppUserLogin, AppUserRole, AppUserClaim> {
+        public class ApplicationUser: IdentityUser<int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim> {
         
             public virtual string MyNewProperty { get; set; }
 
         }
     
-        public class AppUserRole : IdentityUserRole<int> { }
+        public class ApplicationUserRole : IdentityUserRole<int> { }
     
-        public class AppUserLogin : IdentityUserLogin<int> { }
+        public class ApplicationUserLogin : IdentityUserLogin<int> { }
     
-        public class AppUserClaim : IdentityUserClaim<int> { }
+        public class ApplicationUserClaim : IdentityUserClaim<int> { }
     
-        public class AppRoleClaim : IdentityRoleClaim<int> { }
+        public class ApplicationRoleClaim : IdentityRoleClaim<int> { }
     
-        public class AppRole : IdentityRole<int, AppUserRole, AppRoleClaim> { }
+        public class ApplicationRole : IdentityRole<int, ApplicationUserRole, ApplicationRoleClaim> { }
     
 2. Create your own derived data context:
 
         using AspNet.Identity.EntityFramework6;
         
-        public class AppDbContext : IdentityDbContext<AppUser, AppRole, int, AppUserLogin, AppUserRole, AppUserClaim, AppRoleClaim>, IDisposable
+        public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim, ApplicationRoleClaim>, IDisposable
         {
-            public AppDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+            public ApplicationDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
         }
 
 3. Create your own derived UserStore and RoleStore:
 
         using AspNet.Identity.EntityFramework6;
         
-        public class AppRoleStore : RoleStore<AppRole, AppUserRole, AppRoleClaim, DbContext, int>
+        public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationUserRole, ApplicationRoleClaim, DbContext, int>
         {
-            public AppRoleStore(AppDbContext context) : base(context) { }
+            public ApplicationRoleStore(ApplicationDbContext context) : base(context) { }
         }
     
-        public class AppUserStore : UserStore<AppUser, AppRole, AppUserRole, AppUserClaim, AppUserLogin, AppRoleClaim, DbContext, int>
+        public class ApplicationUserStore : UserStore<ApplicationUser, ApplicationRole, ApplicationUserRole, ApplicationUserClaim, ApplicationUserLogin, ApplicationRoleClaim, DbContext, int>
         {
-            public AppUserStore(AppDbContext context) : base(context) { }
+            public ApplicationUserStore(ApplicationDbContext context) : base(context) { }
         }
     
 4. Alter Startup.cs accordingly:
@@ -103,13 +111,13 @@ In the following example we add some properties and use Int32 instead of default
         {
             public void ConfigureServices(IServiceCollection services)
             {
-                services.AddScoped<AppDbContext, AppDbContext>(f => {
-                    return new AppDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
+                services.AddScoped<DbContext, ApplicationDbContext>(f => {
+                    return new ApplicationDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
                 });
             
-                services.AddIdentity<AppUser, AppRole>()
-                    .AddRoleStore<AppRoleStore>()
-                    .AddUserStore<AppUserStore>()
+                services.AddIdentity<ApplicationUser, ApplicationRole>()
+                    .AddRoleStore<ApplicationRoleStore>()
+                    .AddUserStore<ApplicationUserStore>()
                     .AddDefaultTokenProviders();
           }
         }
