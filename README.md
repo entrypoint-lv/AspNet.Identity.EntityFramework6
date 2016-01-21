@@ -1,6 +1,6 @@
-# AspNet.Identity.EntityFramework6
+# EF6 provider for Asp.Net Identity 3.0 RC1
 
-As Identity 3.0 RC1 does not provide the support for EF6, here is the custom implementation.
+As Identity 3.0 RC1 does not provide the support for EF6, here is the custom provider.
 
 ## Basic Usage
 
