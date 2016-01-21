@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Entity;
+
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-//using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using BasicSample.Models;
-using BasicSample.Services;
 
 using AspNet.Identity.EntityFramework6;
+
+using BasicSample.Models;
+using BasicSample.Services;
 
 namespace BasicSample
 {
