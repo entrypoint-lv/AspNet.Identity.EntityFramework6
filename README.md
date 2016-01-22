@@ -4,8 +4,6 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
 
 ## Basic Usage
 
-Please refer to the [Basic Sample](samples/BasicSample) for the full code sample.
-
 1. Reference both EntityFramework 6 and Microsoft.AspNet.Identity packages in your project.json, but DO NOT reference the Microsoft.AspNet.Identity.EntityFramework package:
 
           "frameworks": {
@@ -57,10 +55,9 @@ Please refer to the [Basic Sample](samples/BasicSample) for the full code sample
             }
         }
 
+Please refer to the [Basic Sample](samples/BasicSample) for the full code sample.
 
 ## Your own classes
-
-Please refer to the [Custom Classes Sample](samples/CustomClassesSample) for the full code sample.
 
 Of course, you can inherit from provided Identity classes in order to add new properties or change the type of the primary key for user and role. 
 In the following example we add some properties and use Int32 instead of default String as the primary key type:
@@ -127,3 +124,5 @@ In the following example we add some properties and use Int32 instead of default
                     .AddDefaultTokenProviders();
           }
         }
+
+Please refer to the [Custom Classes Sample](samples/CustomClassesSample) for the full code sample.
