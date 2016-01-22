@@ -44,14 +44,14 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
         {
             public void ConfigureServices(IServiceCollection services)
             {
-                services.AddScoped<DbContext, ApplicationDbContext>(f => {
+                services.AddScoped<ApplicationDbContext>(f => {
                     return new ApplicationDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
                 });
     
                 services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddRoleStore<RoleStore>()
-                    .AddUserStore<UserStore<ApplicationUser>>()
-                    .AddDefaultTokenProviders();
+                .AddUserStore<UserStore<ApplicationUser, ApplicationDbContext>>()
+                .AddRoleStore<RoleStore<ApplicationDbContext>>()
+                .AddDefaultTokenProviders();
             }
         }
 
@@ -95,14 +95,14 @@ In the following example we add some properties and use Int32 instead of default
 
         using AspNet.Identity.EntityFramework6;
         
-        public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationUserRole, ApplicationRoleClaim, DbContext, int>
+        public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationUserRole, ApplicationRoleClaim, ApplicationDbContext, int>
         {
-            public ApplicationRoleStore(DbContext context) : base(context) { }
+            public ApplicationRoleStore(ApplicationDbContext context) : base(context) { }
         }
     
-        public class ApplicationUserStore : UserStore<ApplicationUser, ApplicationRole, ApplicationUserRole, ApplicationUserClaim, ApplicationUserLogin, ApplicationRoleClaim, DbContext, int>
+        public class ApplicationUserStore : UserStore<ApplicationUser, ApplicationRole, ApplicationUserRole, ApplicationUserClaim, ApplicationUserLogin, ApplicationRoleClaim, ApplicationDbContext, int>
         {
-            public ApplicationUserStore(DbContext context) : base(context) { }
+            public ApplicationUserStore(ApplicationDbContext context) : base(context) { }
         }
     
 4. Alter Startup.cs accordingly:
@@ -114,7 +114,7 @@ In the following example we add some properties and use Int32 instead of default
         {
             public void ConfigureServices(IServiceCollection services)
             {
-                services.AddScoped<DbContext, ApplicationDbContext>(f => {
+                services.AddScoped<ApplicationDbContext>(f => {
                     return new ApplicationDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
                 });
             
