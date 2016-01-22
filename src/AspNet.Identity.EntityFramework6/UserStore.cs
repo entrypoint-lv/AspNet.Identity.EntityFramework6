@@ -17,38 +17,51 @@ namespace AspNet.Identity.EntityFramework6
     /// Creates a new instance of a persistence store for users, using the default implementation
     /// of <see cref="IdentityUser{TKey}"/> with a string as a primary key.
     /// </summary>
-    public class UserStore : UserStore<IdentityUser>
+    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
+    public class UserStore<TContext> : UserStore<IdentityUser<string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, TContext>
+        where TContext : DbContext
     {
-        public UserStore(DbContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
+        public UserStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
     }
 
     /// <summary>
     /// Creates a new instance of a persistence store for the specified user type.
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
-    public class UserStore<TUser> : UserStore<TUser, IdentityRole, IdentityUserRole, IdentityUserClaim, IdentityUserLogin, IdentityRoleClaim, DbContext>
-        where TUser : IdentityUser, new()
+    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
+    public class UserStore<TUser, TContext> : UserStore<TUser, IdentityRole, TContext>
+        where TUser : IdentityUser<string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, new()
+        where TContext : DbContext
     {
-        public UserStore(DbContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
+        public UserStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
     }
 
     /// <summary>
-    /// Creates a new instance of a persistence store for the specified types.
+    /// Creates a new instance of a persistence store for the specified user type.
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
-    /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
-    /// <typeparam name="TUserClaim">The type representing a user claim.</typeparam>
-    /// <typeparam name="TUserLogin">The type representing a user login.</typeparam>
     /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
-    public class UserStore<TUser, TRole, TUserRole, TUserClaim, TUserLogin, TRoleClaim, TContext> : UserStore<TUser, TRole, TUserRole, TUserClaim, TUserLogin, TRoleClaim, TContext, string>
-        where TUser : IdentityUser<string, TUserLogin, TUserRole, TUserClaim>, new()
-        where TRole : IdentityRole<string, TUserRole, TRoleClaim>, new()
-        where TUserRole : IdentityUserRole, new()
-        where TUserClaim : IdentityUserClaim, new()
-        where TUserLogin : IdentityUserLogin, new()
-        where TRoleClaim : IdentityRoleClaim
+    public class UserStore<TUser, TRole, TContext> : UserStore<TUser, TRole, IdentityUserRole, IdentityUserClaim, IdentityUserLogin, IdentityRoleClaim, TContext, string>
+        where TUser : IdentityUser<string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, new()
+        where TRole : IdentityRole<string, IdentityUserRole, IdentityRoleClaim>, new()
         where TContext : DbContext
+    {
+        public UserStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
+    }
+
+    /// <summary>
+    /// Creates a new instance of a persistence store for the specified user type.
+    /// </summary>
+    /// <typeparam name="TUser">The type representing a user.</typeparam>
+    /// <typeparam name="TRole">The type representing a role.</typeparam>
+    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key.</typeparam>
+    public class UserStore<TUser, TRole, TContext, TKey> : UserStore<TUser, TRole, IdentityUserRole<TKey>, IdentityUserClaim<TKey>, IdentityUserLogin<TKey>, IdentityRoleClaim<TKey>, TContext, TKey>
+        where TUser : IdentityUser<TKey, IdentityUserLogin<TKey>, IdentityUserRole<TKey>, IdentityUserClaim<TKey>>, new()
+        where TRole : IdentityRole<TKey, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>, new()
+        where TContext : DbContext
+        where TKey : IEquatable<TKey>
     {
         public UserStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
     }

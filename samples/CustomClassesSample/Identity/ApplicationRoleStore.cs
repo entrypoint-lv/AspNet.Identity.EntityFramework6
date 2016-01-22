@@ -10,8 +10,8 @@ using CustomClassesSample.Models;
 
 namespace CustomClassesSample.Identity
 {
-    public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationUserRole, ApplicationRoleClaim, DbContext, int>
+    public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationUserRole, ApplicationRoleClaim, ApplicationDbContext, int>
     {
-        public ApplicationRoleStore(DbContext context) : base(context) { }
+        public ApplicationRoleStore(ApplicationDbContext context) : base(context) { }
     }
 }

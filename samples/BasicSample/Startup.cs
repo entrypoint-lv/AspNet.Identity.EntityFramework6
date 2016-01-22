@@ -6,6 +6,7 @@ using System.Data.Entity;
 
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,13 +43,14 @@ namespace BasicSample
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddScoped<DbContext, ApplicationDbContext>(f => {
+
+            services.AddScoped<ApplicationDbContext>(f => {
                 return new ApplicationDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
             });
-
+    
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddRoleStore<RoleStore>()
-                .AddUserStore<UserStore<ApplicationUser>>()
+                .AddUserStore<UserStore<ApplicationUser, ApplicationDbContext>>()
+                .AddRoleStore<RoleStore<ApplicationDbContext>>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();

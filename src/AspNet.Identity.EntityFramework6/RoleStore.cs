@@ -12,22 +12,22 @@ using System.Data.Entity.Infrastructure;
 
 namespace AspNet.Identity.EntityFramework6
 {
-    /// <summary>
-    /// Creates a new instance of a persistence store for roles.
-    /// </summary>
-    public class RoleStore : RoleStore<IdentityRole>
-    {
-        public RoleStore(DbContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
-    }
+    ///// <summary>
+    ///// Creates a new instance of a persistence store for roles.
+    ///// </summary>
+    //public class RoleStore : RoleStore<IdentityRole, DbContext>
+    //{
+    //    public RoleStore(DbContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
+    //}
 
     /// <summary>
     /// Creates a new instance of a persistence store for roles.
     /// </summary>
-    /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    public class RoleStore<TRole> : RoleStore<TRole, DbContext>
-        where TRole : IdentityRole, new()
+    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
+    public class RoleStore<TContext> : RoleStore<IdentityRole, TContext>
+        where TContext : DbContext
     {
-        public RoleStore(DbContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
+        public RoleStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
     }
 
     /// <summary>
@@ -35,9 +35,23 @@ namespace AspNet.Identity.EntityFramework6
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
     /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
-    public class RoleStore<TRole, TContext> : RoleStore<TRole, IdentityUserRole, IdentityRoleClaim, DbContext, string>
+    public class RoleStore<TRole, TContext> : RoleStore<TRole, IdentityUserRole, IdentityRoleClaim, TContext, string>
         where TRole : IdentityRole, new()
         where TContext : DbContext
+    {
+        public RoleStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
+    }
+
+    /// <summary>
+    /// Creates a new instance of a persistence store for roles.
+    /// </summary>
+    /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
+    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
+    public class RoleStore<TRole, TContext, TKey> : RoleStore<TRole, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>, TContext, TKey>
+        where TRole : IdentityRole<TKey, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>, new()
+        where TContext : DbContext
+        where TKey : IEquatable<TKey>
     {
         public RoleStore(TContext context, IdentityErrorDescriber describer = null) : base(context, describer) { }
     }
@@ -100,7 +114,7 @@ namespace AspNet.Identity.EntityFramework6
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            Context.Entry(role).State = System.Data.Entity.EntityState.Added;
+            Context.Set<TRole>().Add(role);
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
         }
@@ -113,7 +127,7 @@ namespace AspNet.Identity.EntityFramework6
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            Context.Entry(role).State = System.Data.Entity.EntityState.Unchanged;
+            Context.Set<TRole>().Attach(role);
             role.ConcurrencyStamp = Guid.NewGuid().ToString();
             Context.Entry(role).State = System.Data.Entity.EntityState.Modified;
             try
@@ -135,7 +149,7 @@ namespace AspNet.Identity.EntityFramework6
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            Context.Entry(role).State = System.Data.Entity.EntityState.Deleted;
+            Context.Set<TRole>().Remove(role);
             try
             {
                 await SaveChanges(cancellationToken);

@@ -43,13 +43,13 @@ namespace CustomClassesSample
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddScoped<DbContext, ApplicationDbContext>(f => {
+            services.AddScoped<ApplicationDbContext>(f => {
                 return new ApplicationDbContext(Configuration["Data:DefaultConnection:ConnectionString"]);
             });
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddRoleStore<ApplicationRoleStore>()
                 .AddUserStore<ApplicationUserStore>()
+                .AddRoleStore<ApplicationRoleStore>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
