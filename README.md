@@ -55,10 +55,11 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
             }
         }
 
+Please refer to the [Basic Sample](samples/BasicSample) for the full code sample.
 
-## Your own POCOs
+## Your own classes
 
-Of course, you can inherit from provided POCOs in order to add new properties or change the type of the primary key for user and role. 
+Of course, you can inherit from provided Identity classes in order to add new properties or change the type of the primary key for user and role. 
 In the following example we add some properties and use Int32 instead of default String as the primary key type:
 
 1. Create your own derived POCOs:
@@ -85,7 +86,7 @@ In the following example we add some properties and use Int32 instead of default
 
         using AspNet.Identity.EntityFramework6;
         
-        public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim, ApplicationRoleClaim>, IDisposable
+        public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim, ApplicationRoleClaim>
         {
             public ApplicationDbContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
         }
@@ -96,12 +97,12 @@ In the following example we add some properties and use Int32 instead of default
         
         public class ApplicationRoleStore : RoleStore<ApplicationRole, ApplicationUserRole, ApplicationRoleClaim, DbContext, int>
         {
-            public ApplicationRoleStore(ApplicationDbContext context) : base(context) { }
+            public ApplicationRoleStore(DbContext context) : base(context) { }
         }
     
         public class ApplicationUserStore : UserStore<ApplicationUser, ApplicationRole, ApplicationUserRole, ApplicationUserClaim, ApplicationUserLogin, ApplicationRoleClaim, DbContext, int>
         {
-            public ApplicationUserStore(ApplicationDbContext context) : base(context) { }
+            public ApplicationUserStore(DbContext context) : base(context) { }
         }
     
 4. Alter Startup.cs accordingly:
@@ -123,7 +124,5 @@ In the following example we add some properties and use Int32 instead of default
                     .AddDefaultTokenProviders();
           }
         }
-    
-## Samples
 
-Refer to the [samples](samples) folder.
+Please refer to the [Custom Classes Sample](samples/CustomClassesSample) for the full code sample.
