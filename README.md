@@ -20,11 +20,13 @@ As Identity 3.0 RC1 does not provide the support for EF6, here is the custom pro
 
 2. Create you applicaiton user class by inheriting from the provided IdentityUser:
 
-        using AspNet.Identity.EntityFramework6;
+```cs
+using AspNet.Identity.EntityFramework6;
 
-        public class ApplicationUser : IdentityUser
-        {
-        }
+public class ApplicationUser : IdentityUser
+{
+}
+```
 
 3. Make sure that you inherit your data context from the provided IdentityDbContext:
 
